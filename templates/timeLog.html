@@ -103,6 +103,7 @@
 
                 <option value="TimeAndDate">Time and Date</option>
                 <option value="Pnumber">Plate Number</option>
+                <option value="Platenumber">Plate Number</option>
                 <option value="Status">Status</option>
             </select>
             <button class="search-button" type="submit">Search</button>
@@ -116,6 +117,7 @@
                     <!--<th>id</th> -->
                     <th>Time and Date</th>
                     <th>Sticker Number</th>
+                    <th>Plate Number</th>
                     <th>Status</th>
                     <th>Image</th>
 
@@ -127,9 +129,10 @@
                     <td>{{ participant[0] }}</td>
                     <td>{{ participant[1] }}</td>
                     <td>{{ participant[2] }}</td>
+                    <td>{{ participant[3] }}</td>
 
 
-                    <td><a href="#" onclick="openModal('{{ participant[3] }}')">View Here</a></td>
+                    <td><a href="#" onclick="openModal('{{ participant[4] }}')">View Here</a></td>
 
                 </tr>
                 {% endfor %}

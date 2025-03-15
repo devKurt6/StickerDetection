@@ -105,6 +105,7 @@
                 <option value="Lname">Last Name</option>
                 <option value="Vtype">Vtype</option>
                 <option value="Pnumber">Plate Number</option>
+                <option value="Snumber">Sticker Number</option>
                 <option value="PhoneNo">Phone Number</option>
             </select>
             <button class="search-button" type="submit">Search</button>
@@ -120,6 +121,7 @@
                     <th>Last Name</th>
                     <th>Vehicle Type</th>
                     <th>Sticker Number</th>
+                    <th>Plate Number</th>
                     <th>Age</th>
                     <th>Gender</th>
                     <th>Image</th>
@@ -137,10 +139,11 @@
                     <td>{{ participant[4] }}</td>
                     <td>{{ participant[5] }}</td>
                     <td>{{ participant[6] }}</td>
+                    <td>{{ participant[7] }}</td>
                     <td><a href="#" onclick="openModal('{{ participant[7] }}')">View Here</a></td>
-                    <!--<td>{{ participant[8] }}</td>-->
                     <!--<td>{{ participant[9] }}</td>-->
-                    <td>{{ participant[10] }}</td>
+                    <!--<td>{{ participant[10] }}</td>-->
+                    <td>{{ participant[11] }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

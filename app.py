@@ -97,6 +97,7 @@ def join():
         Lname = request.form['Lname']
         Vtype = request.form['Vtype']
         Pnumber = request.form['Pnumber']
+        Snumber = request.form['Snumber']
         age = request.form['age']
         gender = request.form['gender']
         PhoneNo = request.form['PhoneNo']
@@ -113,8 +114,8 @@ def join():
                 password = Lname
 
                 cursor.execute("INSERT INTO car_user \
-                               (Fname, Lname, Vtype, Pnumber, age, entry, one, gender, PhoneNo) VALUES (?,?,?,?,?,?,?,?,?)",
-                               (Fname, Lname, Vtype, Pnumber, age, 0, 0, gender, PhoneNo))
+                               (Fname, Lname, Vtype, Pnumber, Snumber, age, entry, one, gender, PhoneNo) VALUES (?,?,?,?,?,?,?,?,?,?)",
+                               (Fname, Lname, Vtype, Pnumber,Snumber, age, 0, 0, gender, PhoneNo))
                 cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
                 users.commit()
                 return jsonify({'success': True, 'message': 'User successfully registered!'})
@@ -144,7 +145,7 @@ def participants():
     data_with_resized_images = []
 
     for participant in data:
-        image_data = participant[7]
+        image_data = participant[8]
         if image_data:
             # Open the image using PIL
             img = Image.open(io.BytesIO(image_data))
@@ -161,7 +162,7 @@ def participants():
             # Convert resized image data to base64
             image_base64 = base64.b64encode(image_data_resized).decode('utf-8')
             participant_with_resized_image = list(participant)
-            participant_with_resized_image[7] = image_base64
+            participant_with_resized_image[8] = image_base64
             data_with_resized_images.append(participant_with_resized_image)
         else:
             data_with_resized_images.append(participant)
@@ -232,7 +233,7 @@ def timeLog():
     data_with_resized_images = []
 
     for participant in data:
-        image_data = participant[3]
+        image_data = participant[4]
         if image_data:
             # Open the image using PIL
             img = Image.open(io.BytesIO(image_data))
@@ -249,7 +250,7 @@ def timeLog():
             # Convert resized image data to base64
             image_base64 = base64.b64encode(image_data_resized).decode('utf-8')
             participant_with_resized_image = list(participant)
-            participant_with_resized_image[3] = image_base64
+            participant_with_resized_image[4] = image_base64
             data_with_resized_images.append(participant_with_resized_image)
         else:
             data_with_resized_images.append(participant)
@@ -495,10 +496,19 @@ def check_plate_number_exit(extracted_text_str_exit):
             image_binary = file.read()
         cursor.execute("UPDATE car_user SET  entry = ?,one = 0 WHERE Pnumber = ?",
                        ( 0, extracted_text_str_exit))  # Update entry to 1
+
+        # Look up the plate number in the car_user table's Snumber column
+        cursor.execute("SELECT Snumber FROM car_user WHERE Pnumber = ?", (extracted_text_str_exit,))
+        result = cursor.fetchone()
+
+        if result:
+            # Use the found plate number
+            Snumber = result[0]
+
         # Insert current date and time into the table
         current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        cursor.execute('''INSERT INTO timeDate (TimeAndDate, Pnumber,Status,image) VALUES (?,?, ?,?)''',
-                       (current_datetime, extracted_text_str_exit,'Time out',image_binary))
+        cursor.execute('''INSERT INTO timeDate (TimeAndDate, Pnumber,Platenumber,Status,image) VALUES (?,?,?, ?,?)''',
+                       (current_datetime, extracted_text_str_exit,Snumber,'Time out',image_binary))
         # Commit changes and close the connection
         conn.commit()
 
@@ -576,6 +586,16 @@ def capture():
     # Update entry in the database
     conn = sqlite3.connect('mydb.db')
     cursor = conn.cursor()
+
+    # Look up the plate number in the car_user table's Snumber column
+    cursor.execute("SELECT Snumber FROM car_user WHERE Pnumber = ?", (plate_number,))
+    result = cursor.fetchone()
+
+    if result:
+        # Use the found plate number
+        Snumber = result[0]
+
+
     # If the extracted text exists and entry is 0, proceed to update the image column
     image_path = "captured_image_entry.jpg"
     # Read the image file as binary data
@@ -583,8 +603,8 @@ def capture():
         image_binary = file.read()
     # Insert current date and time into the table
     current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    cursor.execute('''INSERT INTO timeDate (TimeAndDate, Pnumber,Status,image) VALUES (?,?,?, ?)''',
-                   (current_datetime, plate_number, 'Time in', image_binary))
+    cursor.execute('''INSERT INTO timeDate (TimeAndDate, Pnumber,Platenumber,Status,image) VALUES (?,?,?,?, ?)''',
+                   (current_datetime, plate_number,Snumber, 'Time in', image_binary))
     conn.commit()
     conn.close()
     return 'Data received and processed successfully'
@@ -682,7 +702,8 @@ def open_gate():
 entry_running = False
 
 # Path to the Python executable within your virtual environment
-python_executable = r"C:\Users\Engr.Kurt Decena\PycharmProjects\pythonProject2\venv\Scripts\python.exe"
+python_executable = r"C:\Users\EngrKurt\PycharmProjects\yolov5\.venv\Scripts\python.exe"
+
 
 def run_entry():
     global entry_running
@@ -693,7 +714,9 @@ def run_entry():
 
     try:
         entry_running = True
-        subprocess.run([python_executable, 'entry.py'])  # Assuming entry.py is in the same directory
+        #subprocess.run([python_executable, 'entry.py'])  # Assuming entry.py is in the same directory
+        subprocess.run([python_executable, 'entry.py'], cwd=r"C:\Users\EngrKurt\PycharmProjects\yolov5")
+
     except Exception as e:
         print("Error running entry.py:", e)
     finally:

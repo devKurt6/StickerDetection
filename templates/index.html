@@ -58,13 +58,34 @@
     <div class="container">
         <h1>Welcome</h1>
         <button class="btn" onclick="window.location.href='{{ url_for('join') }}';"><i class="fas fa-user-plus"></i> Register</button>
+        <button class="btn" onclick="runEntry()"><i class="fas fa-play"></i> Run Entry</button>
+
         <button class="btn" onclick="window.location.href='{{ url_for('participants') }}';"><i class="fas fa-car"></i> View Registered Cars</button>
-        <button class="btn" onclick="window.location.href='{{ url_for('timeLog') }}';"><i class="fas fa-clock"></i> Attendance</button>
-        <button class="btn" onclick="window.location.href='{{ url_for('change_Plate_Number') }}';"><i class="fas fa-exchange-alt"></i> Change Plate Number</button>
+        <button class="btn" onclick="window.location.href='{{ url_for('timeLog') }}';"><i class="fas fa-clock"></i> Time Logs</button>
+        <button class="btn" onclick="window.location.href='{{ url_for('change_Plate_Number') }}';"><i class="fas fa-exchange-alt"></i> Change Sticker Number</button>
         <button class="btn" onclick="window.location.href='{{ url_for('change_password') }}';"><i class="fas fa-cog"></i> Change Password</button>
         <button class="btn" onclick="window.location.href='{{ url_for('open_gate') }}';"><i class="fas fa-cog"></i> Open Gate</button>
-        <button class="btn" onclick="window.location.href='{{ url_for('close_gate') }}';"><i class="fas fa-cog"></i> Open Gate</button>
+        <button class="btn" onclick="window.location.href='{{ url_for('close_gate') }}';"><i class="fas fa-cog"></i> Close Gate</button>
         <button class="btn" onclick="window.location.href='{{ url_for('logout') }}';" style="background-color: #dc3545;"><i class="fas fa-sign-out-alt"></i> Logout</button>
     </div>
+<script>
+    function runEntry() {
+        fetch('/run_entry', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);  // Show response message
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to start the process.');
+        });
+    }
+</script>
+
 </body>
 </html>
