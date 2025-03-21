@@ -122,6 +122,8 @@
                     <th>Vehicle Type</th>
                     <th>Sticker Number</th>
                     <th>Plate Number</th>
+                    <th>Address</th>
+                    <th>Model</th>
                     <th>Age</th>
                     <th>Gender</th>
                     <th>Image</th>
@@ -140,10 +142,12 @@
                     <td>{{ participant[5] }}</td>
                     <td>{{ participant[6] }}</td>
                     <td>{{ participant[7] }}</td>
-                    <td><a href="#" onclick="openModal('{{ participant[7] }}')">View Here</a></td>
-                    <!--<td>{{ participant[9] }}</td>-->
-                    <!--<td>{{ participant[10] }}</td>-->
-                    <td>{{ participant[11] }}</td>
+                    <td>{{ participant[8] }}</td>
+                    <td>{{ participant[9] }}</td>
+                    <td><a href="#" onclick="openModal('{{ participant[10] }}')">View Here</a></td>
+                    <!--<td>{{ participant[11] }}</td>-->
+                    <!--<td>{{ participant[12] }}</td>-->
+                    <td>{{ participant[13] }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

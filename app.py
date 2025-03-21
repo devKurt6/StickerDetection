@@ -98,9 +98,17 @@ def join():
         Vtype = request.form['Vtype']
         Pnumber = request.form['Pnumber']
         Snumber = request.form['Snumber']
+        address = request.form['address']
+        model = request.form['model']
         age = request.form['age']
         gender = request.form['gender']
         PhoneNo = request.form['PhoneNo']
+        image = request.files['image']
+
+        if image:
+            image_data = image.read()
+        else:
+            image_data = None
 
         with sqlite3.connect("mydb.db") as users:
             cursor = users.cursor()
@@ -114,8 +122,8 @@ def join():
                 password = Lname
 
                 cursor.execute("INSERT INTO car_user \
-                               (Fname, Lname, Vtype, Pnumber, Snumber, age, entry, one, gender, PhoneNo) VALUES (?,?,?,?,?,?,?,?,?,?)",
-                               (Fname, Lname, Vtype, Pnumber,Snumber, age, 0, 0, gender, PhoneNo))
+                               (Fname, Lname, Vtype, Pnumber, Snumber,address,model, age, entry, one, gender, PhoneNo,image) VALUES (?,?,?,?,?,?,?,?,?,?,?,? , ?)",
+                               (Fname, Lname, Vtype, Pnumber,Snumber,address,model, age, 0, 0, gender, PhoneNo , image_data))
                 cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
                 users.commit()
                 return jsonify({'success': True, 'message': 'User successfully registered!'})
@@ -145,7 +153,7 @@ def participants():
     data_with_resized_images = []
 
     for participant in data:
-        image_data = participant[8]
+        image_data = participant[10]
         if image_data:
             # Open the image using PIL
             img = Image.open(io.BytesIO(image_data))
@@ -162,7 +170,7 @@ def participants():
             # Convert resized image data to base64
             image_base64 = base64.b64encode(image_data_resized).decode('utf-8')
             participant_with_resized_image = list(participant)
-            participant_with_resized_image[8] = image_base64
+            participant_with_resized_image[10] = image_base64
             data_with_resized_images.append(participant_with_resized_image)
         else:
             data_with_resized_images.append(participant)
@@ -644,9 +652,9 @@ def check_plate_number(extracted_text_str):
         # Read the image file as binary data
         with open(image_path, 'rb') as file:
             image_binary = file.read()
-            # Update the image binary data for a specific row in the database
-        cursor.execute("UPDATE car_user SET image = ?, one = ? WHERE Pnumber = ?",
-                       (image_binary, 1, extracted_text_str))  # Update entry to 1
+            # Update the image binary data for a specific row in the database           image = ?,
+        cursor.execute("UPDATE car_user SET  one = ? WHERE Pnumber = ?",
+                       ( 1, extracted_text_str))  # Update entry to 1
 
         # Commit changes and close the connection
         conn.commit()
