@@ -65,23 +65,91 @@
     height: 100px;
     margin-right: auto;
   }
+  .dropdown {
+  position: relative;
+}
+
+.dropdown > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: white;
+  text-decoration: none;
+  padding: 0.6rem 1rem;
+  font-size: 15px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.dropdown > a:hover {
+  background-color: #0056b3;
+}
+
+.dropdown-content {
+  position: absolute;
+  top: 100%; /* Place directly below the trigger */
+  left: 0;
+  display: none;
+  background-color: #007BFF;
+  min-width: 180px;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+  z-index: 1000;
+  border-radius: 4px;
+}
+
+.dropdown-content a {
+  color: white;
+  padding: 0.6rem 1rem;
+  text-decoration: none;
+  display: block;
+  font-size: 14px;
+}
+
+.dropdown-content a:hover {
+  background-color: #0056b3;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+
   </style>
 </head>
 <body>
 
   <div class="navbar">
 
-    <a href="{{ url_for('join') }}"><i class="fas fa-user-plus"></i>Register</a>
-    <a href="#" onclick="runEntry()"><i class="fas fa-play"></i>Open Camera</a>
-    <a href="{{ url_for('participants') }}"><i class="fas fa-car"></i>Registered Vehicles</a>
-    <a href="{{ url_for('timeLog') }}"><i class="fas fa-clock"></i>Time Logs</a>
-    <a href="{{ url_for('change_Plate_Number') }}"><i class="fas fa-exchange-alt"></i>Change Sticker</a>
-    <a href="{{ url_for('change_password') }}"><i class="fas fa-cog"></i>Password</a>
+    <div class="dropdown">
+  <a href="#"><i class="fas fa-door-open"></i>Gate <i class="fas fa-caret-down"></i></a>
+  <div class="dropdown-content">
     <a href="{{ url_for('open_gate') }}"><i class="fas fa-door-open"></i>Open Gate</a>
     <a href="{{ url_for('close_gate') }}"><i class="fas fa-door-closed"></i>Close Gate</a>
-    <a href="{{ url_for('logout') }}" class="logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
   </div>
+</div>
+<div class="dropdown">
+  <a href="#"><i class="fas fa-car"></i>Register <i class="fas fa-caret-down"></i></a>
+  <div class="dropdown-content">
+    <a href="{{ url_for('join') }}"><i class="fas fa-user-plus"></i>Register Sticker</a>
+    <a href="{{ url_for('change_Plate_Number') }}"><i class="fas fa-exchange-alt"></i>Change Sticker</a>
+  </div>
+</div>
 
+    <a href="#" onclick="runEntry()"><i class="fas fa-play"></i>Open Camera</a>
+    <a href="{{ url_for('participants') }}"><i class="fas fa-car"></i>Registered Vehicles</a>
+    <div class="dropdown">
+  <a href="#"><i class="fas fa-clock"></i>Time Logs <i class="fas fa-caret-down"></i></a>
+  <div class="dropdown-content">
+    <a href="{{ url_for('timeLog') }}"><i class="fas fa-clock"></i> Time Logs</a>
+    <a href="{{ url_for('manual_time') }}"><i class="fas fa-clock"></i> Manual Time Log</a>
+  </div>
+</div>
+
+    <a href="{{ url_for('change_password') }}"><i class="fas fa-cog"></i>Password</a>
+
+    <a href="{{ url_for('logout') }}" class="logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
+
+</div>
   <div class="title">
     <h1>SOUTHSPRING HEIGHTS</h1>
   </div>
