@@ -1,106 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask and SQLite</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-image: url('static/V2.jpg'); /* Add your local image file here */
-            background-size: cover;
-            background-position: center;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            width: 90%; /* Adjusted to keep the container width */
-            overflow-x: auto;
-        }
-        table {
-            border-collapse: collapse;
-            background-color: #fff;
-            border: 1px solid black;
-            width: 100%;
-            table-layout: fixed;
-        }
-        th, td {
-            border: 2px solid black;
-            padding: 8px;
-            text-align: center;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
-        th {
-            background-color: #007bff;
-            color: #fff;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        /* Adjust the width of column 8 */
-        td:nth-child(8) img {
-            max-width: 100%; /* Adjust this value as needed */
-            height: auto%;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flask and SQLite</title>
 
-        }
-         .search-form {
-        margin-bottom: 20px;
-        display: flex; /* Align items horizontally */
-        align-items: center; /* Vertically center items */
+  <!-- Font Awesome for navbar icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: white;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #007BFF;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      width: 100%;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      padding: 0.6rem 1rem;
+      font-size: 15px;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .navbar a:hover {
+      background-color: #0056b3;
+    }
+
+    .navbar .logout {
+      background-color: #dc3545;
+    }
+
+    .navbar .logout:hover {
+      background-color: #b02a37;
+    }
+
+    .container {
+      width: 90%;
+      margin-top: 2rem;
+      overflow-x: auto;
+    }
+
+    table {
+      border-collapse: collapse;
+      background-color: #fff;
+      border: 1px solid black;
+      width: 100%;
+      table-layout: fixed;
+    }
+
+    th, td {
+      border: 2px solid black;
+      padding: 8px;
+      text-align: center;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    th {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    td:nth-child(8) img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .search-form {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
     }
 
     .search-input, .filter-select, .search-button, .clear-button, .back-button {
-        padding: 8px 15px;
-        border-radius: 5px;
-        margin-right: 10px;
+      padding: 8px 15px;
+      border-radius: 5px;
+      margin-right: 10px;
     }
 
     .search-input, .filter-select {
-        border: 1px solid #ccc;
-    }
-
-    .search-button, .clear-button, .back-button {
-        border: none;
-        cursor: pointer;
+      border: 1px solid #ccc;
     }
 
     .search-button {
-        background-color: #007bff;
-        color: #fff;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
     }
 
     .clear-button {
-        background-color: #dc3545;
-        color: #fff;
-        text-decoration: none;
+      background-color: #dc3545;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
     }
 
     .back-button {
-        background-color: #007bff; /* Blue color */
-        color: #fff;
-        text-decoration: none;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      text-decoration: none;
+      cursor: pointer;
     }
 
     .clear-button:hover,
     .search-button:hover,
     .back-button:hover {
-        opacity: 0.8;
+      opacity: 0.8;
     }
-    </style>
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      padding-top: 60px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.8);
+    }
+
+    .modal-content {
+      display: block;
+      margin: auto;
+      max-width: 80%;
+      max-height: 80%;
+    }
+
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 35px;
+      color: #fff;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+      .logo {
+    height: 100px;
+    margin-right: auto;
+  }
+      .title {
+  padding: 1rem 0;
+  text-align: center;
+}
+
+.title h1 {
+  font-size: 2.5rem;
+  margin: 0;
+  padding: 0;
+}
+  </style>
 </head>
 <body>
+
+<div class="navbar">
+  <a href="{{ url_for('join') }}"><i class="fas fa-user-plus"></i> Register</a>
+  <a href="#" onclick="runEntry()"><i class="fas fa-play"></i> Open Camera</a>
+  <a href="{{ url_for('participants') }}"><i class="fas fa-car"></i> Registered Vehicles</a>
+  <a href="{{ url_for('timeLog') }}"><i class="fas fa-clock"></i> Time Logs</a>
+  <a href="{{ url_for('change_Plate_Number') }}"><i class="fas fa-exchange-alt"></i> Change Sticker</a>
+  <a href="{{ url_for('change_password') }}"><i class="fas fa-cog"></i> Password</a>
+  <a href="{{ url_for('open_gate') }}"><i class="fas fa-door-open"></i> Open Gate</a>
+  <a href="{{ url_for('close_gate') }}"><i class="fas fa-door-closed"></i> Close Gate</a>
+  <a href="{{ url_for('logout') }}" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+</div>
+<div class="title">
+    <h1>SOUTHSPRING HEIGHTS</h1>
+  </div>
+
     <div class="container">
         <!-- Add the styled search form -->
         <form class="search-form" action="{{ url_for('timeLog') }}" method="GET">
             <input class="search-input" type="text" name="search" placeholder="Search...">
             <select class="filter-select" name="filter">
-
                 <option value="TimeAndDate">Time and Date</option>
                 <option value="Pnumber">Plate Number</option>
                 <option value="Platenumber">Plate Number</option>
@@ -109,6 +213,8 @@
             <button class="search-button" type="submit">Search</button>
             <a class="clear-button" href="{{ url_for('timeLog') }}">Clear</a>
             <a class="back-button" href="{{ url_for('back') }}">Back</a>
+            <button class="search-button" onclick="window.location.href='/export_excel'">Save as Excel</button>
+
         </form>
 
         <table>
@@ -120,7 +226,6 @@
                     <th>Plate Number</th>
                     <th>Status</th>
                     <th>Image</th>
-
                 </tr>
             </thead>
             <tbody>
@@ -130,36 +235,51 @@
                     <td>{{ participant[1] }}</td>
                     <td>{{ participant[2] }}</td>
                     <td>{{ participant[3] }}</td>
-
-
                     <td><a href="#" onclick="openModal('{{ participant[4] }}')">View Here</a></td>
-
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-
     </div>
-            <!-- The Modal -->
-<div id="myModal" class="modal">
-    <span class="close" onclick="closeModal()">&times;</span>
-    <img class="modal-content" id="img01">
-</div>
-<script>
-    // Open the modal and display the image
-    function openModal(base64Image) {
-        var modal = document.getElementById("myModal");
-        var img = document.getElementById("img01");
-        img.src = 'data:image/jpeg;base64,' + base64Image;
-        modal.style.display = "block";
-    }
 
-    // Close the modal
-    function closeModal() {
-        var modal = document.getElementById("myModal");
-        modal.style.display = "none";
-    }
-</script>
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="img01">
+    </div>
 
+    <script>
+        // Open the modal and display the image
+        function openModal(base64Image) {
+            var modal = document.getElementById("myModal");
+            var img = document.getElementById("img01");
+            img.src = 'data:image/jpeg;base64,' + base64Image;
+            modal.style.display = "block";
+        }
+
+        // Close the modal
+        function closeModal() {
+            var modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
+        function exportToExcel() {
+            window.location.href = "/export_excel";
+        }
+        function exportToExcel() {
+    fetch('/export_excel')
+        .then(response => response.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'time_logs.xlsx'; // User will choose the save location
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        })
+        .catch(error => console.error('Export error:', error));
+}
+
+    </script>
 </body>
 </html>

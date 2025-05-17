@@ -1,153 +1,277 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask and SQLite</title>
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-image: url('static/V2.jpg'); /* Add your local image file here */
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vehicle Registration</title>
 
-        .container {
-            background: #ffffff;
-            height:98%;
-            padding: 20px;
-            padding-bottom: 10px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            width: 350px;
-            text-align: center;
+  <!-- Font Awesome for navbar icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
-        }
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #fff;
+      margin: 0;
+      padding: 0;
+    }
 
-        h2 {
-            color: #333;
-            margin-bottom: 5px;
-        }
+    .navbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #007BFF;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-        label {
-            font-weight: 600;
-            display: block;
-            text-align: left;
-            margin: 2px 0 2px;
-            color: #555;
-        }
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      padding: 0.6rem 1rem;
+      font-size: 15px;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
 
-        input, select {
-            width: 90%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-        }
+    .navbar a:hover {
+      background-color: #0056b3;
+    }
 
-        input[type="submit"] {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 18px;
-            transition: 0.3s;
-        }
+    .navbar .logout {
+      background-color: #dc3545;
+    }
 
-        input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
+    .navbar .logout:hover {
+      background-color: #b02a37;
+    }
 
-        .back-button {
-            display: block;
-            text-decoration: none;
-            background-color: #6c757d;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 5px;
-            font-size: 16px;
-            transition: 0.3s;
-        }
+    .container {
+      max-width: 700px;
+      margin: 2rem auto;
+      background: #ffffff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
 
-        .back-button:hover {
-            background-color: #545b62;
-        }
-    </style>
+    h2 {
+      color: #007bff;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="file"],
+    select {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+
+    input[type="submit"] {
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    .back-button {
+      display: block;
+      margin-top: 10px;
+      text-align: center;
+      background-color: #6c757d;
+      color: white;
+      text-decoration: none;
+      padding: 10px;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: #545b62;
+    }
+
+    @media (min-width: 768px) {
+      .form-row {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .form-row .form-group {
+        flex: 1;
+      }
+    }
+      .logo {
+    height: 100px;
+    margin-right: auto;
+  }
+      .title {
+  padding: 1rem 0;
+  text-align: center;
+}
+
+.title h1 {
+  font-size: 2.5rem;
+  margin: 0;
+  padding: 0;
+}
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Registration</h2>
-        <form id="registrationForm">
-            <label for="Fname">First Name:</label>
-            <input type="text" id="Fname" name="Fname" placeholder="Enter your first name" required>
 
-            <label for="Lname">Last Name:</label>
-            <input type="text" id="Lname" name="Lname" placeholder="Enter your last name" required>
+  <div class="navbar">
+    <a href="{{ url_for('join') }}"><i class="fas fa-user-plus"></i> Register</a>
+    <a href="#" onclick="runEntry()"><i class="fas fa-play"></i> Open Camera</a>
+    <a href="{{ url_for('participants') }}"><i class="fas fa-car"></i> Registered Vehicles</a>
+    <a href="{{ url_for('timeLog') }}"><i class="fas fa-clock"></i> Time Logs</a>
+    <a href="{{ url_for('change_Plate_Number') }}"><i class="fas fa-exchange-alt"></i> Change Sticker</a>
+    <a href="{{ url_for('change_password') }}"><i class="fas fa-cog"></i> Password</a>
+    <a href="{{ url_for('open_gate') }}"><i class="fas fa-door-open"></i> Open Gate</a>
+    <a href="{{ url_for('close_gate') }}"><i class="fas fa-door-closed"></i> Close Gate</a>
+    <a href="{{ url_for('logout') }}" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  </div>
+<div class="title">
+    <h1>SOUTHSPRING HEIGHTS</h1>
+  </div>
+  <div class="container">
+    <h2>Vehicle Registration</h2>
+    <form id="registrationForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="Fname">First Name</label>
+          <input type="text" id="Fname" name="Fname" required>
+        </div>
+        <div class="form-group">
+          <label for="Lname">Last Name</label>
+          <input type="text" id="Lname" name="Lname" required>
+        </div>
+      </div>
 
-            <label for="Vtype">Vehicle Type:</label>
-            <select id="Vtype" name="Vtype" required>
-                <option value="4wheels">4 Wheels</option>
-                <option value="2wheels">2 Wheels</option>
-            </select>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="Vtype">Vehicle Type</label>
+          <select id="Vtype" name="Vtype" required>
+            <option value="4wheels">4 Wheels</option>
+            <option value="2wheels">2 Wheels</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="Pnumber">Sticker Number</label>
+          <input type="text" id="Pnumber" name="Pnumber" required>
+        </div>
+      </div>
 
-            <label for="Pnumber">Sticker Number:</label>
-            <input type="text" id="Pnumber" name="Pnumber" placeholder="Enter your Sticker Number" required>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="Snumber">Plate Number</label>
+          <input type="text" id="Snumber" name="Snumber" required>
+        </div>
+        <div class="form-group">
+          <label for="address">Address</label>
+          <input type="text" id="address" name="address" required>
+        </div>
+      </div>
 
-            <label for="Snumber">Plate Number:</label>
-            <input type="text" id="Snumber" name="Snumber" placeholder="Enter your Plate Number" required>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="model">Model</label>
+          <input type="text" id="model" name="model" required>
+        </div>
+        <div class="form-group">
+          <label for="age">Age</label>
+          <input type="number" id="age" name="age" required>
+        </div>
+      </div>
 
-            <label for="address">Address:</label>
-            <input type="text" id="address" name="address" placeholder="Enter your address Number" required>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="gender">Gender</label>
+          <select id="gender" name="gender" required>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="PhoneNo">Phone Number</label>
+          <input type="text" id="PhoneNo" name="PhoneNo" required>
+        </div>
+      </div>
 
-            <label for="model">Model:</label>
-            <input type="text" id="model" name="model" placeholder="Enter your car model" required>
+      <div class="form-group">
+        <label for="image">Upload Image</label>
+        <input type="file" id="image" name="image" accept="image/*" required>
+      </div>
 
-            <label for="age">Age:</label>
-            <input type="number" id="age" name="age" placeholder="Enter age" required>
+      <input type="submit" value="Submit">
+      <a class="back-button" href="{{ url_for('back') }}">Back</a>
+    </form>
+  </div>
 
-            <label for="gender">Gender:</label>
-            <select id="gender" name="gender" required>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-            </select>
+  <script>
+    function runEntry() {
+      fetch('/run_entry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(response => response.json())
+      .then(data => alert(data.message))
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to start the process.');
+      });
+    }
 
-            <label for="PhoneNo">Phone Number:</label>
-            <input type="text" id="PhoneNo" name="PhoneNo" placeholder="Enter Your Phone Number" required>
+    document.getElementById('registrationForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const formData = new FormData(this);
+      fetch('/join', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert(data.message);
+        this.reset();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+        this.reset();
+      });
+    });
+  </script>
 
-            <label for="image">Upload Image:</label>
-            <input type="file" id="image" name="image" accept="image/*" required>
-
-            <input type="submit" value="Submit">
-            <a class="back-button" href="{{ url_for('back') }}">Back</a>
-        </form>
-    </div>
-
-    <script>
-        document.getElementById('registrationForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-            const formData = new FormData(this);
-            fetch('/join', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-                this.reset();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred. Please try again.');
-                this.reset();
-            });
-        });
-    </script>
 </body>
 </html>
